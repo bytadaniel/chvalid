@@ -26,6 +26,8 @@
 	}]))
 */
 
+import { modelFromCreateQuery } from './src/helpers'
+
 export * from './src/types'
 export * from './src/model'
 export * from './src/schema'

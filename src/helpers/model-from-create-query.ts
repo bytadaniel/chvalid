@@ -22,7 +22,7 @@ export function modelFromCreateQuery (ddl: string) {
 			const defaultWordIndex = other.map(o => o.toLowerCase()).findIndex(c => c === 'default')
 
 			if (!Types[type]) {
-				console.log({
+				console.log('!!!unknown type!!!!', {
 					Types, type
 				})
 			}
