@@ -1,0 +1,20 @@
+CREATE TABLE prod.article_stocks
+(
+    `dateTime` DateTime,
+    `article` UInt64,
+    `optionId` UInt64,
+    `sizeOrigName` String,
+    `name` String,
+    `brandName` String,
+    `brandId` UInt32,
+    `subjectId` UInt32 DEFAULT -1,
+    `supplierId` UInt32,
+    `priceU` Int64,
+    `salePriceU` Int64,
+    `stocksSum` UInt32,
+    `stocks` Map(String, UInt64)
+)
+ENGINE = MergeTree
+PARTITION BY toYYYYMM(dateTime)
+ORDER BY (subjectId, brandId, supplierId, article, dateTime)
+SETTINGS index_granularity = 8192
