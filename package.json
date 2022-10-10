@@ -1,6 +1,6 @@
 {
   "name": "chvalid",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Define schema validation for most common usage cases",
   "main": "lib/index.js",
   "files": [
