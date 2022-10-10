@@ -34,7 +34,7 @@ A simple utility to generate datatype schemas for Clickhouse and validate incomi
 ```
 
 ### 🔥 Killer feature
-Create model automaticly from DDL
+Create models automaticly from DDL
 ```js
 	import { modelFromCreateQuery } from './src/helpers/model-from-create-query'
 
@@ -42,5 +42,5 @@ Create model automaticly from DDL
 
 	const DeveloperModel = modelFromCreateQuery(ddl)
 
-	DeveloperModel.#createInsertQuery([...rows])
+	DeveloperModel.$createInsertQuery([...rows])
 ```
