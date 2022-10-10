@@ -1,4 +1,4 @@
-// /*
+/*
 	import * as Types from './src/types'
 	import { Schema } from './src/schema'
 	import { model } from './src/model'
@@ -24,8 +24,9 @@
 		sku: Infinity,
 		name: 'hello'
 	}]))
-// */
+*/
 
 export * from './src/types'
 export * from './src/model'
 export * from './src/schema'
+export * from './src/helpers'

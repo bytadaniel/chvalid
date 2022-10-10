@@ -1,25 +1,34 @@
 import ss from 'sqlstring'
 import { Schema } from "../schema";
+import { SchemaConstructor } from '../schema/interface';
 
 type BaseInterface = Record<string, any>
 
 class Model<ModelInterface extends BaseInterface> {
-  constructor (
-		protected readonly schema: Schema,
-		protected readonly database: string,
-		protected readonly table: string
-	) {}
+	readonly #schema: Schema<SchemaConstructor>;
+	readonly #database: string;
+	readonly #table: string;
 
-	private get tableName () {
-		return `${this.database}.${this.table}`
+  constructor (
+		schema: Schema,
+		database: string,
+		table: string
+	) {
+		this.#schema = schema
+		this.#database = database
+		this.#table = table
 	}
 
-	private validateRow (row: ModelInterface) {
+	get #tableName () {
+		return `${this.#database}.${this.#table}`
+	}
+
+	#validateRow (row: ModelInterface) {
 		for (const [column, value] of Object.entries(row)) {
-			const property = this.schema.properties[column]
-			const hasPropertyInSchema = this.schema.properties.hasOwnProperty(column)
+			const property = this.#schema.properties[column]
+			const hasPropertyInSchema = this.#schema.properties.hasOwnProperty(column)
 			if (!hasPropertyInSchema) {
-				throw new Error(`${column} is not defined in [${this.table}] table schema`)
+				throw new Error(`${column} is not defined in [${this.#table}] table schema`)
 			}
 
 			const hasValidValue = property.validate(value)
@@ -31,8 +40,8 @@ class Model<ModelInterface extends BaseInterface> {
  
 	public $getCreateQuery (): string {
 		return `
-			CREATE TABLE IF NOT EXISTS ${this.tableName} (${
-				Object.entries(this.schema.properties).map(([name, type]) => {
+			CREATE TABLE IF NOT EXISTS ${this.#tableName} (${
+				Object.entries(this.#schema.properties).map(([name, type]) => {
 					const rowParts: string[] = []
 					rowParts.push(name, type.getType())
 					if (type.options.default) {
@@ -45,14 +54,14 @@ class Model<ModelInterface extends BaseInterface> {
 	}
 
 	public $createInsertQuery (rows: ModelInterface[]) {
-		rows.forEach(row => this.validateRow(row))
+		rows.forEach(row => this.#validateRow(row))
 
 		const rowsSQL = rows.map(row => {
-			const values = Object.keys(this.schema.properties).map(key => ss.escape(row[key]))
+			const values = Object.keys(this.#schema.properties).map(key => ss.escape(row[key]))
 			return `(${values.join(',')})`
 		})
 
-		return `INSERT INTO ${this.tableName} (${Object.keys(this.schema.properties).join(', ')}) VALUES ${rowsSQL.join(' ')}`
+		return `INSERT INTO ${this.#tableName} (${Object.keys(this.#schema.properties).join(', ')}) VALUES ${rowsSQL.join(' ')}`
 	}
 }
 
