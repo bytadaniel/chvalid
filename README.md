@@ -1,1 +1,1 @@
-# clickhouse-schema-validator
+# chvalid
